@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wep to APK Zidan</title>
+<style>
+body { font-family: sans-serif; max-width: 720px; margin: 24px auto; }
+input, button { padding: 8px; margin-top: 4px; width: 100%; }
+button { cursor: pointer; }
+</style>
+</head>
+<body>
+<h1>Wep to APK Zidan</h1>
+<form id="apkForm">
+<label>رابط الموقع:</label>
+<input type="url" id="url" placeholder="https://example.com" required>
+<label>اسم التطبيق:</label>
+<input type="text" id="name" value="Wep to APK Zidan" required>
+<label>لون شاشة البداية:</label>
+<input type="color" id="splash" value="#ffffff">
+<label>أيقونة PNG:</label>
+<input type="file" id="icon" accept="image/*">
+<button type="submit">إنشاء APK</button>
+</form>
+<p id="message"></p>
+<script>
+const form = document.getElementById('apkForm');
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = document.getElementById('url').value;
+    const name = document.getElementById('name').value;
+    const splash = document.getElementById('splash').value;
+    const iconFile = document.getElementById('icon').files[0];
+    const formData = new FormData();
+    formData.append('url', url);
+    formData.append('name', name);
+    formData.append('splash', splash);
+    if(iconFile) formData.append('icon', iconFile);
+    const msg = document.getElementById('message');
+    msg.textContent = 'جاري الإرسال...';
+    try {
+        const res = await fetch('/api/build', { method: 'POST', body: formData });
+        const data = await res.json();
+        msg.textContent = 'تم استلام الطلب — ID: ' + data.jobId;
+    } catch(err) {
+        msg.textContent = 'حدث خطأ: ' + err.message;
+    }
+});
+</script>
+</body>
+</html>
