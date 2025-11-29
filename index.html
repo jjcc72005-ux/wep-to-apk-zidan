@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>امتحني - منصة الاختبارات العامة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- إضافة Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -445,6 +452,34 @@
             width: 250px;
         }
 
+        .image-upload {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .image-upload i {
+            font-size: 3rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+
+        .exam-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -521,11 +556,9 @@
             </div>
             
             <div class="exams-grid" id="publicExamsGrid">
-                <!-- سيتم عرض الامتحانات العامة هنا -->
                 <div class="no-questions">
-                    <i class="fas fa-globe"></i>
-                    <h3>لا توجد امتحانات عامة بعد</h3>
-                    <p>كن أول من ينشئ امتحاناً عاماً يشاركه مع الجميع</p>
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>جاري تحميل الامتحانات...</h3>
                 </div>
             </div>
         </div>
@@ -542,6 +575,16 @@
             <div class="form-group">
                 <label for="examDescription">وصف الامتحان (اختياري):</label>
                 <textarea id="examDescription" placeholder="أدخل وصفاً للامتحان..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>صورة الامتحان (اختياري):</label>
+                <div class="image-upload" id="imageUpload">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>انقر لرفع صورة للامتحان</p>
+                    <input type="file" id="examImage" accept="image/*" style="display: none;">
+                </div>
+                <div id="imagePreview"></div>
             </div>
             
             <h3 style="margin: 25px 0 15px;">إضافة الأسئلة</h3>
@@ -598,7 +641,6 @@
             <div class="questions-list" id="currentExamQuestions" style="margin-top: 30px;">
                 <h3>أسئلة الامتحان الحالي</h3>
                 <div id="currentQuestionsList">
-                    <!-- سيتم عرض أسئلة الامتحان الحالي هنا -->
                     <div class="no-questions">
                         <i class="fas fa-inbox"></i>
                         <p>لم يتم إضافة أي أسئلة بعد</p>
@@ -611,11 +653,9 @@
         <div class="tab-content" id="my-exams">
             <h2><i class="fas fa-user"></i> الامتحانات التي أنشأتها</h2>
             <div class="exams-grid" id="myExamsGrid">
-                <!-- سيتم عرض امتحانات المستخدم هنا -->
                 <div class="no-questions">
-                    <i class="fas fa-user"></i>
-                    <h3>لم تنشئ أي امتحانات بعد</h3>
-                    <p>إذهب إلى قسم "إنشاء امتحان" لتبدأ</p>
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>جاري تحميل الامتحانات...</h3>
                 </div>
             </div>
         </div>
@@ -659,17 +699,31 @@
     </div>
 
     <script>
+        // ⚡ تكوين Firebase - استبدل هذا بالتكوين الخاص بك
+        const firebaseConfig = {
+            apiKey: "AIzaSyAWRddTDbmhRBSpdpNQBCdUm1G1LNVc7Lc",
+            authDomain: "zidan-7e48c.firebaseapp.com",
+            projectId: "zidan-7e48c",
+            storageBucket: "zidan-7e48c.firebasestorage.app",
+            messagingSenderId: "102950879698",
+            appId: "1:102950879698:web:8eb1cd50f15411e402c80b",
+            measurementId: "G-MRJRG4RVSX"
+        };
+
+        // تهيئة Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const storage = firebase.storage();
+
         // بيانات التطبيق
-        let publicExams = JSON.parse(localStorage.getItem('examniPublicExams')) || [];
-        let currentUser = localStorage.getItem('examniCurrentUser') || `مستخدم_${Math.floor(Math.random() * 10000)}`;
+        let currentUser = null;
+        let publicExams = [];
         let currentExam = {
             title: '',
             description: '',
             questions: [],
-            author: currentUser,
-            createdAt: new Date().toISOString(),
-            attempts: 0,
-            avgScore: 0
+            imageFile: null
         };
         let currentExamAnswers = [];
         let examSubmitted = false;
@@ -687,6 +741,9 @@
         const finishExamBtn = document.getElementById('finishExam');
         const searchExamsInput = document.getElementById('searchExams');
         const searchBtn = document.getElementById('searchBtn');
+        const imageUpload = document.getElementById('imageUpload');
+        const examImageInput = document.getElementById('examImage');
+        const imagePreview = document.getElementById('imagePreview');
         
         // عناصر النافذة المنبثقة
         const examModal = document.getElementById('examModal');
@@ -701,20 +758,91 @@
         const modalResultMessage = document.getElementById('modalResultMessage');
         const modalReviewAnswersBtn = document.getElementById('modalReviewAnswers');
 
+        // تسجيل الدخول كضيف
+        auth.signInAnonymously()
+            .then(() => {
+                console.log('تم التسجيل كضيف');
+                loadPublicExams();
+            })
+            .catch(error => {
+                console.error('خطأ في التسجيل:', error);
+            });
+
+        // الاستماع لتغير حالة المستخدم
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            if (user) {
+                console.log('المستخدم الحالي:', user.uid);
+            }
+        });
+
+        // تحميل الامتحانات العامة من Firebase
+        function loadPublicExams() {
+            publicExamsGrid.innerHTML = `
+                <div class="no-questions">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>جاري تحميل الامتحانات...</h3>
+                </div>
+            `;
+
+            db.collection('exams').orderBy('createdAt', 'desc').get()
+                .then(snapshot => {
+                    publicExams = [];
+                    snapshot.forEach(doc => {
+                        publicExams.push({
+                            id: doc.id,
+                            ...doc.data()
+                        });
+                    });
+                    displayPublicExams();
+                    displayMyExams();
+                })
+                .catch(error => {
+                    console.error('خطأ في تحميل الامتحانات:', error);
+                    publicExamsGrid.innerHTML = `
+                        <div class="no-questions">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>خطأ في تحميل الامتحانات</h3>
+                            <p>حاول تحديث الصفحة</p>
+                        </div>
+                    `;
+                });
+        }
+
+        // حفظ امتحان جديد في Firebase
+        function saveExamToFirebase(examData) {
+            return db.collection('exams').add(examData);
+        }
+
+        // رفع صورة إلى Firebase Storage
+        function uploadImage(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) {
+                    resolve(null);
+                    return;
+                }
+
+                const storageRef = storage.ref();
+                const imageRef = storageRef.child(`exam-images/${Date.now()}_${file.name}`);
+                
+                imageRef.put(file)
+                    .then(snapshot => snapshot.ref.getDownloadURL())
+                    .then(url => resolve(url))
+                    .catch(error => reject(error));
+            });
+        }
+
         // تبديل التبويبات
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const tabId = btn.getAttribute('data-tab');
                 
-                // إزالة النشاط من جميع الأزرار والمحتويات
                 tabBtns.forEach(b => b.classList.remove('active'));
                 tabContents.forEach(c => c.classList.remove('active'));
                 
-                // إضافة النشاط للزر والمحتوى المحدد
                 btn.classList.add('active');
                 document.getElementById(tabId).classList.add('active');
                 
-                // تحديث المحتوى حسب التبويب
                 if (tabId === 'public-exams') {
                     displayPublicExams();
                 } else if (tabId === 'my-exams') {
@@ -722,6 +850,35 @@
                 }
             });
         });
+
+        // رفع الصورة
+        imageUpload.addEventListener('click', () => {
+            examImageInput.click();
+        });
+
+        examImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                currentExam.imageFile = file;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.innerHTML = `
+                        <img src="${e.target.result}" class="exam-image" alt="صورة الامتحان">
+                        <button class="btn btn-danger" onclick="removeImage()" style="margin-top: 10px;">
+                            <i class="fas fa-trash"></i> حذف الصورة
+                        </button>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // حذف الصورة
+        window.removeImage = function() {
+            currentExam.imageFile = null;
+            imagePreview.innerHTML = '';
+            examImageInput.value = '';
+        };
 
         // إضافة سؤال إلى الامتحان الحالي
         questionForm.addEventListener('submit', (e) => {
@@ -755,15 +912,12 @@
             currentExam.title = examTitleInput.value;
             currentExam.description = examDescriptionInput.value;
             
-            // إعادة تعيين النموذج
             questionForm.reset();
-            
-            // تحديث عرض الأسئلة
             displayCurrentExamQuestions();
         });
 
         // إنهاء الامتحان ونشره
-        finishExamBtn.addEventListener('click', () => {
+        finishExamBtn.addEventListener('click', async () => {
             if (currentExam.questions.length === 0) {
                 alert('يجب إضافة سؤال واحد على الأقل');
                 return;
@@ -773,48 +927,54 @@
                 alert('يرجى إدخال عنوان للامتحان');
                 return;
             }
-            
-            // إنشاء امتحان جديد
-            const newExam = {
-                id: Date.now(),
-                title: currentExam.title,
-                description: currentExam.description,
-                questions: [...currentExam.questions],
-                author: currentUser,
-                createdAt: new Date().toISOString(),
-                attempts: 0,
-                avgScore: 0
-            };
-            
-            publicExams.push(newExam);
-            savePublicExams();
-            
-            // إعادة تعيين الامتحان الحالي
-            currentExam = {
-                title: '',
-                description: '',
-                questions: [],
-                author: currentUser,
-                createdAt: new Date().toISOString(),
-                attempts: 0,
-                avgScore: 0
-            };
-            
-            examTitleInput.value = '';
-            examDescriptionInput.value = '';
-            displayCurrentExamQuestions();
-            
-            // عرض رسالة نجاح
-            alert('تم نشر الامتحان بنجاح! يمكن للجميع رؤيته الآن في قسم الامتحانات العامة');
-            
-            // الانتقال إلى تبويب الامتحانات العامة
-            document.querySelector('[data-tab="public-exams"]').click();
-        });
 
-        // حفظ الامتحانات العامة في localStorage
-        function savePublicExams() {
-            localStorage.setItem('examniPublicExams', JSON.stringify(publicExams));
-        }
+            try {
+                // رفع الصورة أولاً إذا وجدت
+                let imageUrl = null;
+                if (currentExam.imageFile) {
+                    imageUrl = await uploadImage(currentExam.imageFile);
+                }
+
+                // إنشاء امتحان جديد
+                const newExam = {
+                    title: currentExam.title,
+                    description: currentExam.description,
+                    questions: currentExam.questions,
+                    author: currentUser ? 'مستخدم مجهول' : 'زائر',
+                    authorId: currentUser ? currentUser.uid : 'anonymous',
+                    createdAt: new Date().toISOString(),
+                    attempts: 0,
+                    avgScore: 0,
+                    imageUrl: imageUrl
+                };
+                
+                // حفظ في Firebase
+                await saveExamToFirebase(newExam);
+                
+                // إعادة تعيين الامتحان الحالي
+                currentExam = {
+                    title: '',
+                    description: '',
+                    questions: [],
+                    imageFile: null
+                };
+                
+                examTitleInput.value = '';
+                examDescriptionInput.value = '';
+                imagePreview.innerHTML = '';
+                examImageInput.value = '';
+                displayCurrentExamQuestions();
+                
+                alert('تم نشر الامتحان بنجاح! يمكن للجميع رؤيته الآن في قسم الامتحانات العامة');
+                
+                // إعادة تحميل الامتحانات
+                loadPublicExams();
+                document.querySelector('[data-tab="public-exams"]').click();
+            } catch (error) {
+                console.error('خطأ في حفظ الامتحان:', error);
+                alert('حدث خطأ في حفظ الامتحان. حاول مرة أخرى.');
+            }
+        });
 
         // عرض الامتحانات العامة
         function displayPublicExams() {
@@ -835,6 +995,7 @@
                 const examElement = document.createElement('div');
                 examElement.className = 'exam-card';
                 examElement.innerHTML = `
+                    ${exam.imageUrl ? `<img src="${exam.imageUrl}" class="exam-image" alt="${exam.title}">` : ''}
                     <div class="exam-title">${exam.title}</div>
                     <div class="exam-meta">
                         <div class="exam-author">
@@ -857,7 +1018,7 @@
                             <div class="stat-label">أيام</div>
                         </div>
                     </div>
-                    <button class="btn" style="width: 100%; margin-top: 15px;" onclick="takeExam(${exam.id})">
+                    <button class="btn" style="width: 100%; margin-top: 15px;" onclick="takeExam('${exam.id}')">
                         <i class="fas fa-play"></i> بدء الامتحان
                     </button>
                 `;
@@ -868,7 +1029,9 @@
 
         // عرض امتحانات المستخدم
         function displayMyExams() {
-            const myExams = publicExams.filter(exam => exam.author === currentUser);
+            if (!currentUser) return;
+            
+            const myExams = publicExams.filter(exam => exam.authorId === currentUser.uid);
             
             if (myExams.length === 0) {
                 myExamsGrid.innerHTML = `
@@ -887,6 +1050,7 @@
                 const examElement = document.createElement('div');
                 examElement.className = 'exam-card';
                 examElement.innerHTML = `
+                    ${exam.imageUrl ? `<img src="${exam.imageUrl}" class="exam-image" alt="${exam.title}">` : ''}
                     <div class="exam-title">${exam.title}</div>
                     <div class="exam-meta">
                         <div class="exam-author">
@@ -910,10 +1074,10 @@
                         </div>
                     </div>
                     <div class="actions" style="margin-top: 15px;">
-                        <button class="btn" style="flex: 1;" onclick="takeExam(${exam.id})">
+                        <button class="btn" style="flex: 1;" onclick="takeExam('${exam.id}')">
                             <i class="fas fa-play"></i> حل الامتحان
                         </button>
-                        <button class="btn btn-danger" onclick="deleteExam(${exam.id})">
+                        <button class="btn btn-danger" onclick="deleteExam('${exam.id}')">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -961,25 +1125,29 @@
         }
 
         // حذف سؤال من الامتحان الحالي
-        function deleteCurrentQuestion(id) {
+        window.deleteCurrentQuestion = function(id) {
             if (confirm('هل أنت متأكد من حذف هذا السؤال؟')) {
                 currentExam.questions = currentExam.questions.filter(q => q.id !== id);
                 displayCurrentExamQuestions();
             }
-        }
+        };
 
         // حذف امتحان
-        function deleteExam(id) {
+        window.deleteExam = function(id) {
             if (confirm('هل أنت متأكد من حذف هذا الامتحان؟')) {
-                publicExams = publicExams.filter(exam => exam.id !== id);
-                savePublicExams();
-                displayPublicExams();
-                displayMyExams();
+                db.collection('exams').doc(id).delete()
+                    .then(() => {
+                        loadPublicExams();
+                    })
+                    .catch(error => {
+                        console.error('خطأ في حذف الامتحان:', error);
+                        alert('حدث خطأ في حذف الامتحان');
+                    });
             }
-        }
+        };
 
         // بدء حل امتحان
-        function takeExam(examId) {
+        window.takeExam = function(examId) {
             const exam = publicExams.find(e => e.id === examId);
             if (!exam) return;
             
@@ -987,7 +1155,6 @@
             currentExamAnswers = new Array(exam.questions.length).fill(null);
             examSubmitted = false;
             
-            // تحديث النافذة المنبثقة
             modalExamTitle.textContent = exam.title;
             modalExamAuthor.textContent = `من إنشاء: ${exam.author}`;
             modalExamContainer.innerHTML = '';
@@ -1010,7 +1177,6 @@
                 modalExamContainer.appendChild(questionElement);
             });
             
-            // إضافة أحداث النقر على الخيارات
             modalExamContainer.querySelectorAll('.exam-option').forEach(option => {
                 option.addEventListener('click', function() {
                     if (examSubmitted) return;
@@ -1018,24 +1184,18 @@
                     const questionIndex = parseInt(this.getAttribute('data-question'));
                     const optionIndex = parseInt(this.getAttribute('data-option'));
                     
-                    // إزالة التحديد من جميع خيارات هذا السؤال
                     const allOptions = modalExamContainer.querySelectorAll(`.exam-option[data-question="${questionIndex}"]`);
                     allOptions.forEach(opt => opt.classList.remove('selected'));
                     
-                    // تحديد الخيار المختار
                     this.classList.add('selected');
-                    
-                    // حفظ الإجابة
                     currentExamAnswers[questionIndex] = optionIndex;
                 });
             });
             
             modalExamActions.style.display = 'flex';
             modalResultsContainer.style.display = 'none';
-            
-            // عرض النافذة المنبثقة
             examModal.style.display = 'block';
-        }
+        };
 
         // إغلاق النافذة المنبثقة
         closeExamBtn.addEventListener('click', () => {
@@ -1128,15 +1288,20 @@
             
             modalResultMessage.textContent = `نسبة النجاح: ${percentage}% - ${message}`;
             
-            // تحديث إحصائيات الامتحان
-            const examIndex = publicExams.findIndex(e => e.id === currentTakingExam.id);
-            if (examIndex !== -1) {
-                publicExams[examIndex].attempts += 1;
-                publicExams[examIndex].avgScore = Math.round(
-                    ((publicExams[examIndex].avgScore * (publicExams[examIndex].attempts - 1)) + percentage) / publicExams[examIndex].attempts
-                );
-                savePublicExams();
-            }
+            // تحديث إحصائيات الامتحان في Firebase
+            const examRef = db.collection('exams').doc(currentTakingExam.id);
+            const newAttempts = currentTakingExam.attempts + 1;
+            const newAvgScore = Math.round(
+                ((currentTakingExam.avgScore * currentTakingExam.attempts) + percentage) / newAttempts
+            );
+            
+            examRef.update({
+                attempts: newAttempts,
+                avgScore: newAvgScore
+            }).then(() => {
+                // إعادة تحميل البيانات
+                loadPublicExams();
+            });
             
             modalExamActions.style.display = 'none';
             modalResultsContainer.style.display = 'block';
@@ -1160,7 +1325,7 @@
             
             const filteredExams = publicExams.filter(exam => 
                 exam.title.toLowerCase().includes(searchTerm) || 
-                exam.description.toLowerCase().includes(searchTerm) ||
+                (exam.description && exam.description.toLowerCase().includes(searchTerm)) ||
                 exam.author.toLowerCase().includes(searchTerm)
             );
             
@@ -1181,6 +1346,7 @@
                 const examElement = document.createElement('div');
                 examElement.className = 'exam-card';
                 examElement.innerHTML = `
+                    ${exam.imageUrl ? `<img src="${exam.imageUrl}" class="exam-image" alt="${exam.title}">` : ''}
                     <div class="exam-title">${exam.title}</div>
                     <div class="exam-meta">
                         <div class="exam-author">
@@ -1203,7 +1369,7 @@
                             <div class="stat-label">أيام</div>
                         </div>
                     </div>
-                    <button class="btn" style="width: 100%; margin-top: 15px;" onclick="takeExam(${exam.id})">
+                    <button class="btn" style="width: 100%; margin-top: 15px;" onclick="takeExam('${exam.id}')">
                         <i class="fas fa-play"></i> بدء الامتحان
                     </button>
                 `;
@@ -1214,8 +1380,7 @@
 
         // تهيئة التطبيق عند التحميل
         document.addEventListener('DOMContentLoaded', () => {
-            displayPublicExams();
-            displayMyExams();
+            displayCurrentExamQuestions();
         });
     </script>
 </body>
