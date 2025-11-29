@@ -6,11 +6,10 @@
     <title>امتحني - منصة الاختبارات العامة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- إضافة Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-storage-compat.js"></script>
+    <!-- إضافة Firebase - الإصدار المتوافق -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
         * {
@@ -226,14 +225,6 @@
 
         .btn-danger:hover {
             background-color: #e91e63;
-        }
-
-        .btn-warning {
-            background-color: var(--warning);
-        }
-
-        .btn-warning:hover {
-            background-color: #e68a17;
         }
 
         .questions-list {
@@ -452,34 +443,6 @@
             width: 250px;
         }
 
-        .image-upload {
-            border: 2px dashed #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .image-upload:hover {
-            border-color: var(--primary);
-        }
-
-        .image-upload i {
-            font-size: 3rem;
-            color: #6c757d;
-            margin-bottom: 10px;
-        }
-
-        .exam-image {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
         footer {
             text-align: center;
             margin-top: 40px;
@@ -575,16 +538,6 @@
             <div class="form-group">
                 <label for="examDescription">وصف الامتحان (اختياري):</label>
                 <textarea id="examDescription" placeholder="أدخل وصفاً للامتحان..."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>صورة الامتحان (اختياري):</label>
-                <div class="image-upload" id="imageUpload">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>انقر لرفع صورة للامتحان</p>
-                    <input type="file" id="examImage" accept="image/*" style="display: none;">
-                </div>
-                <div id="imagePreview"></div>
             </div>
             
             <h3 style="margin: 25px 0 15px;">إضافة الأسئلة</h3>
@@ -699,22 +652,20 @@
     </div>
 
     <script>
-        // ⚡ تكوين Firebase - استبدل هذا بالتكوين الخاص بك
+        // ⚡ تكوين Firebase - النسخة المتوافقة
         const firebaseConfig = {
             apiKey: "AIzaSyAWRddTDbmhRBSpdpNQBCdUm1G1LNVc7Lc",
             authDomain: "zidan-7e48c.firebaseapp.com",
             projectId: "zidan-7e48c",
             storageBucket: "zidan-7e48c.firebasestorage.app",
             messagingSenderId: "102950879698",
-            appId: "1:102950879698:web:8eb1cd50f15411e402c80b",
-            measurementId: "G-MRJRG4RVSX"
+            appId: "1:102950879698:web:7a167768d0e76ee702c80b"
         };
 
         // تهيئة Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const storage = firebase.storage();
 
         // بيانات التطبيق
         let currentUser = null;
@@ -722,8 +673,7 @@
         let currentExam = {
             title: '',
             description: '',
-            questions: [],
-            imageFile: null
+            questions: []
         };
         let currentExamAnswers = [];
         let examSubmitted = false;
@@ -741,9 +691,6 @@
         const finishExamBtn = document.getElementById('finishExam');
         const searchExamsInput = document.getElementById('searchExams');
         const searchBtn = document.getElementById('searchBtn');
-        const imageUpload = document.getElementById('imageUpload');
-        const examImageInput = document.getElementById('examImage');
-        const imagePreview = document.getElementById('imagePreview');
         
         // عناصر النافذة المنبثقة
         const examModal = document.getElementById('examModal');
@@ -814,24 +761,6 @@
             return db.collection('exams').add(examData);
         }
 
-        // رفع صورة إلى Firebase Storage
-        function uploadImage(file) {
-            return new Promise((resolve, reject) => {
-                if (!file) {
-                    resolve(null);
-                    return;
-                }
-
-                const storageRef = storage.ref();
-                const imageRef = storageRef.child(`exam-images/${Date.now()}_${file.name}`);
-                
-                imageRef.put(file)
-                    .then(snapshot => snapshot.ref.getDownloadURL())
-                    .then(url => resolve(url))
-                    .catch(error => reject(error));
-            });
-        }
-
         // تبديل التبويبات
         tabBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -850,35 +779,6 @@
                 }
             });
         });
-
-        // رفع الصورة
-        imageUpload.addEventListener('click', () => {
-            examImageInput.click();
-        });
-
-        examImageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                currentExam.imageFile = file;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    imagePreview.innerHTML = `
-                        <img src="${e.target.result}" class="exam-image" alt="صورة الامتحان">
-                        <button class="btn btn-danger" onclick="removeImage()" style="margin-top: 10px;">
-                            <i class="fas fa-trash"></i> حذف الصورة
-                        </button>
-                    `;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // حذف الصورة
-        window.removeImage = function() {
-            currentExam.imageFile = null;
-            imagePreview.innerHTML = '';
-            examImageInput.value = '';
-        };
 
         // إضافة سؤال إلى الامتحان الحالي
         questionForm.addEventListener('submit', (e) => {
@@ -929,12 +829,6 @@
             }
 
             try {
-                // رفع الصورة أولاً إذا وجدت
-                let imageUrl = null;
-                if (currentExam.imageFile) {
-                    imageUrl = await uploadImage(currentExam.imageFile);
-                }
-
                 // إنشاء امتحان جديد
                 const newExam = {
                     title: currentExam.title,
@@ -942,10 +836,9 @@
                     questions: currentExam.questions,
                     author: currentUser ? 'مستخدم مجهول' : 'زائر',
                     authorId: currentUser ? currentUser.uid : 'anonymous',
-                    createdAt: new Date().toISOString(),
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     attempts: 0,
-                    avgScore: 0,
-                    imageUrl: imageUrl
+                    avgScore: 0
                 };
                 
                 // حفظ في Firebase
@@ -955,14 +848,11 @@
                 currentExam = {
                     title: '',
                     description: '',
-                    questions: [],
-                    imageFile: null
+                    questions: []
                 };
                 
                 examTitleInput.value = '';
                 examDescriptionInput.value = '';
-                imagePreview.innerHTML = '';
-                examImageInput.value = '';
                 displayCurrentExamQuestions();
                 
                 alert('تم نشر الامتحان بنجاح! يمكن للجميع رؤيته الآن في قسم الامتحانات العامة');
@@ -995,7 +885,6 @@
                 const examElement = document.createElement('div');
                 examElement.className = 'exam-card';
                 examElement.innerHTML = `
-                    ${exam.imageUrl ? `<img src="${exam.imageUrl}" class="exam-image" alt="${exam.title}">` : ''}
                     <div class="exam-title">${exam.title}</div>
                     <div class="exam-meta">
                         <div class="exam-author">
@@ -1014,7 +903,7 @@
                             <div class="stat-label">متوسط النتيجة</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value">${Math.ceil((new Date() - new Date(exam.createdAt)) / (1000 * 60 * 60 * 24))}</div>
+                            <div class="stat-value">${exam.createdAt ? Math.ceil((new Date() - new Date(exam.createdAt.toDate())) / (1000 * 60 * 60 * 24)) : 0}</div>
                             <div class="stat-label">أيام</div>
                         </div>
                     </div>
@@ -1050,7 +939,6 @@
                 const examElement = document.createElement('div');
                 examElement.className = 'exam-card';
                 examElement.innerHTML = `
-                    ${exam.imageUrl ? `<img src="${exam.imageUrl}" class="exam-image" alt="${exam.title}">` : ''}
                     <div class="exam-title">${exam.title}</div>
                     <div class="exam-meta">
                         <div class="exam-author">
@@ -1069,7 +957,7 @@
                             <div class="stat-label">متوسط النتيجة</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value">${Math.ceil((new Date() - new Date(exam.createdAt)) / (1000 * 60 * 60 * 24))}</div>
+                            <div class="stat-value">${exam.createdAt ? Math.ceil((new Date() - new Date(exam.createdAt.toDate())) / (1000 * 60 * 60 * 24)) : 0}</div>
                             <div class="stat-label">أيام</div>
                         </div>
                     </div>
@@ -1346,7 +1234,6 @@
                 const examElement = document.createElement('div');
                 examElement.className = 'exam-card';
                 examElement.innerHTML = `
-                    ${exam.imageUrl ? `<img src="${exam.imageUrl}" class="exam-image" alt="${exam.title}">` : ''}
                     <div class="exam-title">${exam.title}</div>
                     <div class="exam-meta">
                         <div class="exam-author">
@@ -1365,7 +1252,7 @@
                             <div class="stat-label">متوسط النتيجة</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value">${Math.ceil((new Date() - new Date(exam.createdAt)) / (1000 * 60 * 60 * 24))}</div>
+                            <div class="stat-value">${exam.createdAt ? Math.ceil((new Date() - new Date(exam.createdAt.toDate())) / (1000 * 60 * 60 * 24)) : 0}</div>
                             <div class="stat-label">أيام</div>
                         </div>
                     </div>
