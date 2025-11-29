@@ -416,7 +416,8 @@
                 renderExams();
             } catch (error) {
                 console.error('Error loading exams:', error);
-                document.getElementById('exams-container').innerHTML = '<div class="loading">حدث خطأ في تحميل الامتحانات</div>';
+                document.getElementById('exams-container').innerHTML = 
+                    '<div class="loading">حدث خطأ في تحميل الامتحانات: ' + error.message + '</div>';
             }
         }
 
