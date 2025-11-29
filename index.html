@@ -2,178 +2,1221 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>امتحني شكراً</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>امتحني - منصة الاختبارات العامة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --green: #2ec4b6;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
             padding: 20px;
-            direction: rtl;
-            text-align: right;
         }
 
         .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 700px;
-            margin: auto;
-            box-shadow: 0px 0px 10px #ccc;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        h1, h2 {
+        header {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
             text-align: center;
         }
 
-        img.logo {
-            display: block;
-            margin: auto;
-            width: 120px;
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
         }
 
-        .question {
-            margin-top: 20px;
-            padding: 15px;
-            background: #fafafa;
-            border-radius: 8px;
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
         }
 
-        button {
-            padding: 10px 20px;
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
             margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background-color: var(--light);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--dark);
         }
 
-        .correct { color: green; font-weight: bold; }
-        .wrong { color: red; font-weight: bold; }
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background-color: var(--light);
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .option-item:hover {
+            border-color: var(--primary);
+        }
+
+        .option-item input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0;
+        }
+
+        .option-item input:focus {
+            border: none;
+            outline: none;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--green);
+        }
+
+        .btn-success:hover {
+            background-color: #26a69a;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #e91e63;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background-color: #e68a17;
+        }
+
+        .questions-list {
+            margin-top: 30px;
+        }
+
+        .question-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .options-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .option {
+            padding: 10px;
+            background-color: var(--white);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option.correct {
+            background-color: rgba(46, 196, 182, 0.2);
+            border: 2px solid var(--green);
+        }
+
+        .option-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .exam-container {
+            margin-top: 20px;
+        }
+
+        .exam-question {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .exam-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .exam-option {
+            padding: 12px 15px;
+            background-color: var(--white);
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .exam-option:hover {
+            border-color: var(--primary);
+        }
+
+        .exam-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.1);
+        }
+
+        .results-container {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+
+        .correct-answer {
+            color: var(--green);
+            font-weight: bold;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .no-questions {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .no-questions i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+
+        .exams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .exam-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            border-top: 4px solid var(--primary);
+        }
+
+        .exam-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .exam-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .exam-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .exam-questions-count {
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .exam-author {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .exam-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+            font-size: 0.9rem;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-value {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .public-exams-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            width: 250px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--white);
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .options-container, .options-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .exams-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .public-exams-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <div>
+                    <h1>امتحني</h1>
+                    <p class="subtitle">منصة الاختبارات العامة - شارك امتحاناتك مع الجميع</p>
+                </div>
+            </div>
+            
+            <div class="nav-tabs">
+                <button class="tab-btn active" data-tab="public-exams">
+                    <i class="fas fa-globe"></i> الامتحانات العامة
+                </button>
+                <button class="tab-btn" data-tab="create-exam">
+                    <i class="fas fa-plus-circle"></i> إنشاء امتحان
+                </button>
+                <button class="tab-btn" data-tab="my-exams">
+                    <i class="fas fa-user"></i> امتحاناتي
+                </button>
+            </div>
+        </header>
 
-<div class="container">
-    <img src="1.jpg" class="logo" alt="Logo">
+        <!-- الامتحانات العامة -->
+        <div class="tab-content active" id="public-exams">
+            <div class="public-exams-header">
+                <h2><i class="fas fa-globe"></i> الامتحانات العامة المتاحة</h2>
+                <div class="search-box">
+                    <input type="text" id="searchExams" placeholder="ابحث عن امتحان...">
+                    <button class="btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="exams-grid" id="publicExamsGrid">
+                <!-- سيتم عرض الامتحانات العامة هنا -->
+                <div class="no-questions">
+                    <i class="fas fa-globe"></i>
+                    <h3>لا توجد امتحانات عامة بعد</h3>
+                    <p>كن أول من ينشئ امتحاناً عاماً يشاركه مع الجميع</p>
+                </div>
+            </div>
+        </div>
 
-    <h1>امتحني شكراً</h1>
-    <h2>إنشاء امتحان جديد</h2>
+        <!-- إنشاء امتحان -->
+        <div class="tab-content" id="create-exam">
+            <h2><i class="fas fa-plus-circle"></i> إنشاء امتحان جديد</h2>
+            
+            <div class="form-group">
+                <label for="examTitle">عنوان الامتحان:</label>
+                <input type="text" id="examTitle" placeholder="أدخل عنواناً للامتحان..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="examDescription">وصف الامتحان (اختياري):</label>
+                <textarea id="examDescription" placeholder="أدخل وصفاً للامتحان..."></textarea>
+            </div>
+            
+            <h3 style="margin: 25px 0 15px;">إضافة الأسئلة</h3>
+            
+            <form id="questionForm">
+                <div class="form-group">
+                    <label for="questionText">نص السؤال:</label>
+                    <textarea id="questionText" placeholder="أدخل نص السؤال هنا..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>الاختيارات:</label>
+                    <div class="options-container">
+                        <div class="option-item">
+                            <span class="option-number">1</span>
+                            <input type="text" id="option1" placeholder="الاختيار الأول" required>
+                        </div>
+                        <div class="option-item">
+                            <span class="option-number">2</span>
+                            <input type="text" id="option2" placeholder="الاختيار الثاني" required>
+                        </div>
+                        <div class="option-item">
+                            <span class="option-number">3</span>
+                            <input type="text" id="option3" placeholder="الاختيار الثالث" required>
+                        </div>
+                        <div class="option-item">
+                            <span class="option-number">4</span>
+                            <input type="text" id="option4" placeholder="الاختيار الرابع" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="correctAnswer">الإجابة الصحيحة:</label>
+                    <select id="correctAnswer" required>
+                        <option value="">اختر الإجابة الصحيحة</option>
+                        <option value="1">الاختيار الأول</option>
+                        <option value="2">الاختيار الثاني</option>
+                        <option value="3">الاختيار الثالث</option>
+                        <option value="4">الاختيار الرابع</option>
+                    </select>
+                </div>
+                
+                <div class="actions">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-plus"></i> إضافة السؤال
+                    </button>
+                    <button type="button" class="btn" id="finishExam">
+                        <i class="fas fa-check"></i> إنهاء الامتحان
+                    </button>
+                </div>
+            </form>
+            
+            <div class="questions-list" id="currentExamQuestions" style="margin-top: 30px;">
+                <h3>أسئلة الامتحان الحالي</h3>
+                <div id="currentQuestionsList">
+                    <!-- سيتم عرض أسئلة الامتحان الحالي هنا -->
+                    <div class="no-questions">
+                        <i class="fas fa-inbox"></i>
+                        <p>لم يتم إضافة أي أسئلة بعد</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div>
-        <label>السؤال:</label>
-        <input type="text" id="questionText" style="width:100%">
-        <br><br>
-
-        <label>الإجابات الأربعة:</label>
-        <input placeholder="اختيار 1" id="c1" style="width:100%"><br><br>
-        <input placeholder="اختيار 2" id="c2" style="width:100%"><br><br>
-        <input placeholder="اختيار 3" id="c3" style="width:100%"><br><br>
-        <input placeholder="اختيار 4" id="c4" style="width:100%"><br><br>
-
-        <label>الاختيار الصحيح (1 - 4):</label>
-        <input type="number" id="correct" min="1" max="4">
-
-        <button onclick="addQuestion()">إضافة السؤال</button>
+        <!-- امتحاناتي -->
+        <div class="tab-content" id="my-exams">
+            <h2><i class="fas fa-user"></i> الامتحانات التي أنشأتها</h2>
+            <div class="exams-grid" id="myExamsGrid">
+                <!-- سيتم عرض امتحانات المستخدم هنا -->
+                <div class="no-questions">
+                    <i class="fas fa-user"></i>
+                    <h3>لم تنشئ أي امتحانات بعد</h3>
+                    <p>إذهب إلى قسم "إنشاء امتحان" لتبدأ</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- نافذة عرض الامتحان -->
+        <div id="examModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto;">
+            <div class="container" style="margin-top: 40px; margin-bottom: 40px;">
+                <div class="tab-content active" style="position: relative;">
+                    <button id="closeExam" style="position: absolute; left: 20px; top: 20px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    
+                    <h2 id="modalExamTitle">امتحان</h2>
+                    <p id="modalExamAuthor" style="color: #6c757d; margin-bottom: 20px;"></p>
+                    
+                    <div class="exam-container" id="modalExamContainer">
+                        <!-- سيتم عرض الامتحان هنا -->
+                    </div>
+                    
+                    <div class="actions" id="modalExamActions" style="display: none;">
+                        <button class="btn btn-success" id="modalSubmitExam">
+                            <i class="fas fa-check-circle"></i> إنهاء الاختبار
+                        </button>
+                    </div>
+                    
+                    <div class="results-container" id="modalResultsContainer" style="display: none;">
+                        <h2>نتيجة الاختبار</h2>
+                        <div class="score" id="modalScore">0/0</div>
+                        <p id="modalResultMessage"></p>
+                        <button class="btn" id="modalReviewAnswers">
+                            <i class="fas fa-eye"></i> مراجعة الإجابات
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>تم التطوير بواسطة نظام "امتحني" &copy; 2023 - منصة الاختبارات العامة</p>
+        </footer>
     </div>
 
-    <hr>
+    <script>
+        // بيانات التطبيق
+        let publicExams = JSON.parse(localStorage.getItem('examniPublicExams')) || [];
+        let currentUser = localStorage.getItem('examniCurrentUser') || `مستخدم_${Math.floor(Math.random() * 10000)}`;
+        let currentExam = {
+            title: '',
+            description: '',
+            questions: [],
+            author: currentUser,
+            createdAt: new Date().toISOString(),
+            attempts: 0,
+            avgScore: 0
+        };
+        let currentExamAnswers = [];
+        let examSubmitted = false;
+        let currentTakingExam = null;
 
-    <h2>الأسئلة المضافة</h2>
-    <div id="questionsList"></div>
+        // عناصر DOM
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const questionForm = document.getElementById('questionForm');
+        const publicExamsGrid = document.getElementById('publicExamsGrid');
+        const myExamsGrid = document.getElementById('myExamsGrid');
+        const currentQuestionsList = document.getElementById('currentQuestionsList');
+        const examTitleInput = document.getElementById('examTitle');
+        const examDescriptionInput = document.getElementById('examDescription');
+        const finishExamBtn = document.getElementById('finishExam');
+        const searchExamsInput = document.getElementById('searchExams');
+        const searchBtn = document.getElementById('searchBtn');
+        
+        // عناصر النافذة المنبثقة
+        const examModal = document.getElementById('examModal');
+        const closeExamBtn = document.getElementById('closeExam');
+        const modalExamTitle = document.getElementById('modalExamTitle');
+        const modalExamAuthor = document.getElementById('modalExamAuthor');
+        const modalExamContainer = document.getElementById('modalExamContainer');
+        const modalExamActions = document.getElementById('modalExamActions');
+        const modalSubmitExamBtn = document.getElementById('modalSubmitExam');
+        const modalResultsContainer = document.getElementById('modalResultsContainer');
+        const modalScore = document.getElementById('modalScore');
+        const modalResultMessage = document.getElementById('modalResultMessage');
+        const modalReviewAnswersBtn = document.getElementById('modalReviewAnswers');
 
-    <button onclick="startExam()">بدء الامتحان</button>
+        // تبديل التبويبات
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                
+                // إزالة النشاط من جميع الأزرار والمحتويات
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                // إضافة النشاط للزر والمحتوى المحدد
+                btn.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+                
+                // تحديث المحتوى حسب التبويب
+                if (tabId === 'public-exams') {
+                    displayPublicExams();
+                } else if (tabId === 'my-exams') {
+                    displayMyExams();
+                }
+            });
+        });
 
-    <div id="examArea"></div>
+        // إضافة سؤال إلى الامتحان الحالي
+        questionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!examTitleInput.value.trim()) {
+                alert('يرجى إدخال عنوان للامتحان أولاً');
+                return;
+            }
+            
+            const questionText = document.getElementById('questionText').value;
+            const option1 = document.getElementById('option1').value;
+            const option2 = document.getElementById('option2').value;
+            const option3 = document.getElementById('option3').value;
+            const option4 = document.getElementById('option4').value;
+            const correctAnswer = document.getElementById('correctAnswer').value;
+            
+            if (!questionText || !option1 || !option2 || !option3 || !option4 || !correctAnswer) {
+                alert('يرجى ملء جميع الحقول');
+                return;
+            }
+            
+            const newQuestion = {
+                id: Date.now(),
+                text: questionText,
+                options: [option1, option2, option3, option4],
+                correct: parseInt(correctAnswer) - 1
+            };
+            
+            currentExam.questions.push(newQuestion);
+            currentExam.title = examTitleInput.value;
+            currentExam.description = examDescriptionInput.value;
+            
+            // إعادة تعيين النموذج
+            questionForm.reset();
+            
+            // تحديث عرض الأسئلة
+            displayCurrentExamQuestions();
+        });
 
-</div>
+        // إنهاء الامتحان ونشره
+        finishExamBtn.addEventListener('click', () => {
+            if (currentExam.questions.length === 0) {
+                alert('يجب إضافة سؤال واحد على الأقل');
+                return;
+            }
+            
+            if (!examTitleInput.value.trim()) {
+                alert('يرجى إدخال عنوان للامتحان');
+                return;
+            }
+            
+            // إنشاء امتحان جديد
+            const newExam = {
+                id: Date.now(),
+                title: currentExam.title,
+                description: currentExam.description,
+                questions: [...currentExam.questions],
+                author: currentUser,
+                createdAt: new Date().toISOString(),
+                attempts: 0,
+                avgScore: 0
+            };
+            
+            publicExams.push(newExam);
+            savePublicExams();
+            
+            // إعادة تعيين الامتحان الحالي
+            currentExam = {
+                title: '',
+                description: '',
+                questions: [],
+                author: currentUser,
+                createdAt: new Date().toISOString(),
+                attempts: 0,
+                avgScore: 0
+            };
+            
+            examTitleInput.value = '';
+            examDescriptionInput.value = '';
+            displayCurrentExamQuestions();
+            
+            // عرض رسالة نجاح
+            alert('تم نشر الامتحان بنجاح! يمكن للجميع رؤيته الآن في قسم الامتحانات العامة');
+            
+            // الانتقال إلى تبويب الامتحانات العامة
+            document.querySelector('[data-tab="public-exams"]').click();
+        });
 
-<script>
-    let questions = [];
-
-    // تحميل الأسئلة من التخزين
-    if (localStorage.getItem("exam_questions")) {
-        questions = JSON.parse(localStorage.getItem("exam_questions"));
-        displayQuestions();
-    }
-
-    function addQuestion() {
-        let q = document.getElementById("questionText").value;
-        let c1 = document.getElementById("c1").value;
-        let c2 = document.getElementById("c2").value;
-        let c3 = document.getElementById("c3").value;
-        let c4 = document.getElementById("c4").value;
-        let correct = document.getElementById("correct").value;
-
-        if (!q || !c1 || !c2 || !c3 || !c4 || !correct) {
-            alert("اكمل كل الحقول");
-            return;
+        // حفظ الامتحانات العامة في localStorage
+        function savePublicExams() {
+            localStorage.setItem('examniPublicExams', JSON.stringify(publicExams));
         }
 
-        questions.push({
-            question: q,
-            choices: [c1, c2, c3, c4],
-            correct: Number(correct)
+        // عرض الامتحانات العامة
+        function displayPublicExams() {
+            if (publicExams.length === 0) {
+                publicExamsGrid.innerHTML = `
+                    <div class="no-questions">
+                        <i class="fas fa-globe"></i>
+                        <h3>لا توجد امتحانات عامة بعد</h3>
+                        <p>كن أول من ينشئ امتحاناً عاماً يشاركه مع الجميع</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            publicExamsGrid.innerHTML = '';
+            
+            publicExams.forEach(exam => {
+                const examElement = document.createElement('div');
+                examElement.className = 'exam-card';
+                examElement.innerHTML = `
+                    <div class="exam-title">${exam.title}</div>
+                    <div class="exam-meta">
+                        <div class="exam-author">
+                            <i class="fas fa-user"></i> ${exam.author}
+                        </div>
+                        <div class="exam-questions-count">${exam.questions.length} سؤال</div>
+                    </div>
+                    <p>${exam.description || 'لا يوجد وصف'}</p>
+                    <div class="exam-stats">
+                        <div class="stat">
+                            <div class="stat-value">${exam.attempts}</div>
+                            <div class="stat-label">مرات الحل</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${exam.avgScore}%</div>
+                            <div class="stat-label">متوسط النتيجة</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${Math.ceil((new Date() - new Date(exam.createdAt)) / (1000 * 60 * 60 * 24))}</div>
+                            <div class="stat-label">أيام</div>
+                        </div>
+                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 15px;" onclick="takeExam(${exam.id})">
+                        <i class="fas fa-play"></i> بدء الامتحان
+                    </button>
+                `;
+                
+                publicExamsGrid.appendChild(examElement);
+            });
+        }
+
+        // عرض امتحانات المستخدم
+        function displayMyExams() {
+            const myExams = publicExams.filter(exam => exam.author === currentUser);
+            
+            if (myExams.length === 0) {
+                myExamsGrid.innerHTML = `
+                    <div class="no-questions">
+                        <i class="fas fa-user"></i>
+                        <h3>لم تنشئ أي امتحانات بعد</h3>
+                        <p>إذهب إلى قسم "إنشاء امتحان" لتبدأ</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            myExamsGrid.innerHTML = '';
+            
+            myExams.forEach(exam => {
+                const examElement = document.createElement('div');
+                examElement.className = 'exam-card';
+                examElement.innerHTML = `
+                    <div class="exam-title">${exam.title}</div>
+                    <div class="exam-meta">
+                        <div class="exam-author">
+                            <i class="fas fa-user"></i> أنت
+                        </div>
+                        <div class="exam-questions-count">${exam.questions.length} سؤال</div>
+                    </div>
+                    <p>${exam.description || 'لا يوجد وصف'}</p>
+                    <div class="exam-stats">
+                        <div class="stat">
+                            <div class="stat-value">${exam.attempts}</div>
+                            <div class="stat-label">مرات الحل</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${exam.avgScore}%</div>
+                            <div class="stat-label">متوسط النتيجة</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${Math.ceil((new Date() - new Date(exam.createdAt)) / (1000 * 60 * 60 * 24))}</div>
+                            <div class="stat-label">أيام</div>
+                        </div>
+                    </div>
+                    <div class="actions" style="margin-top: 15px;">
+                        <button class="btn" style="flex: 1;" onclick="takeExam(${exam.id})">
+                            <i class="fas fa-play"></i> حل الامتحان
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteExam(${exam.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                myExamsGrid.appendChild(examElement);
+            });
+        }
+
+        // عرض أسئلة الامتحان الحالي
+        function displayCurrentExamQuestions() {
+            if (currentExam.questions.length === 0) {
+                currentQuestionsList.innerHTML = `
+                    <div class="no-questions">
+                        <i class="fas fa-inbox"></i>
+                        <p>لم يتم إضافة أي أسئلة بعد</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            currentQuestionsList.innerHTML = '';
+            
+            currentExam.questions.forEach((question, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question-card';
+                questionElement.innerHTML = `
+                    <div class="question-text">${index + 1}. ${question.text}</div>
+                    <div class="options-list">
+                        ${question.options.map((option, i) => `
+                            <div class="option ${i === question.correct ? 'correct' : ''}">
+                                <span class="option-number">${i + 1}</span>
+                                <span>${option}</span>
+                                ${i === question.correct ? '<i class="fas fa-check correct-answer"></i>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteCurrentQuestion(${question.id})" style="margin-top: 15px;">
+                        <i class="fas fa-trash"></i> حذف السؤال
+                    </button>
+                `;
+                
+                currentQuestionsList.appendChild(questionElement);
+            });
+        }
+
+        // حذف سؤال من الامتحان الحالي
+        function deleteCurrentQuestion(id) {
+            if (confirm('هل أنت متأكد من حذف هذا السؤال؟')) {
+                currentExam.questions = currentExam.questions.filter(q => q.id !== id);
+                displayCurrentExamQuestions();
+            }
+        }
+
+        // حذف امتحان
+        function deleteExam(id) {
+            if (confirm('هل أنت متأكد من حذف هذا الامتحان؟')) {
+                publicExams = publicExams.filter(exam => exam.id !== id);
+                savePublicExams();
+                displayPublicExams();
+                displayMyExams();
+            }
+        }
+
+        // بدء حل امتحان
+        function takeExam(examId) {
+            const exam = publicExams.find(e => e.id === examId);
+            if (!exam) return;
+            
+            currentTakingExam = exam;
+            currentExamAnswers = new Array(exam.questions.length).fill(null);
+            examSubmitted = false;
+            
+            // تحديث النافذة المنبثقة
+            modalExamTitle.textContent = exam.title;
+            modalExamAuthor.textContent = `من إنشاء: ${exam.author}`;
+            modalExamContainer.innerHTML = '';
+            
+            exam.questions.forEach((question, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'exam-question';
+                questionElement.innerHTML = `
+                    <div class="question-text">${index + 1}. ${question.text}</div>
+                    <div class="exam-options">
+                        ${question.options.map((option, i) => `
+                            <div class="exam-option" data-question="${index}" data-option="${i}">
+                                <span class="option-number">${i + 1}</span>
+                                <span>${option}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                modalExamContainer.appendChild(questionElement);
+            });
+            
+            // إضافة أحداث النقر على الخيارات
+            modalExamContainer.querySelectorAll('.exam-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    if (examSubmitted) return;
+                    
+                    const questionIndex = parseInt(this.getAttribute('data-question'));
+                    const optionIndex = parseInt(this.getAttribute('data-option'));
+                    
+                    // إزالة التحديد من جميع خيارات هذا السؤال
+                    const allOptions = modalExamContainer.querySelectorAll(`.exam-option[data-question="${questionIndex}"]`);
+                    allOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // تحديد الخيار المختار
+                    this.classList.add('selected');
+                    
+                    // حفظ الإجابة
+                    currentExamAnswers[questionIndex] = optionIndex;
+                });
+            });
+            
+            modalExamActions.style.display = 'flex';
+            modalResultsContainer.style.display = 'none';
+            
+            // عرض النافذة المنبثقة
+            examModal.style.display = 'block';
+        }
+
+        // إغلاق النافذة المنبثقة
+        closeExamBtn.addEventListener('click', () => {
+            examModal.style.display = 'none';
         });
 
-        localStorage.setItem("exam_questions", JSON.stringify(questions));
-
-        displayQuestions();
-
-        document.getElementById("questionText").value = "";
-        document.getElementById("c1").value = "";
-        document.getElementById("c2").value = "";
-        document.getElementById("c3").value = "";
-        document.getElementById("c4").value = "";
-        document.getElementById("correct").value = "";
-    }
-
-    function displayQuestions() {
-        let list = document.getElementById("questionsList");
-        list.innerHTML = "";
-
-        questions.forEach((q, i) => {
-            list.innerHTML += `
-            <div class="question">
-                <b>سؤال ${i+1}:</b> ${q.question}<br>
-                - ${q.choices[0]}<br>
-                - ${q.choices[1]}<br>
-                - ${q.choices[2]}<br>
-                - ${q.choices[3]}<br>
-                <span class="correct">✔ الإجابة الصحيحة: ${q.correct}</span>
-            </div>
-            `;
-        });
-    }
-
-    function startExam() {
-        let exam = document.getElementById("examArea");
-        exam.innerHTML = "<h2>الامتحان</h2>";
-
-        questions.forEach((q, i) => {
-            exam.innerHTML += `
-            <div class="question">
-                <b>${q.question}</b><br>
-                <input type="radio" name="q${i}" value="1"> ${q.choices[0]}<br>
-                <input type="radio" name="q${i}" value="2"> ${q.choices[1]}<br>
-                <input type="radio" name="q${i}" value="3"> ${q.choices[2]}<br>
-                <input type="radio" name="q${i}" value="4"> ${q.choices[3]}<br>
-            </div>
-            `;
+        // تقديم الامتحان في النافذة المنبثقة
+        modalSubmitExamBtn.addEventListener('click', () => {
+            const unanswered = currentExamAnswers.filter(answer => answer === null).length;
+            
+            if (unanswered > 0 && !confirm(`لديك ${unanswered} أسئلة لم تتم الإجابة عليها. هل تريد المتابعة؟`)) {
+                return;
+            }
+            
+            examSubmitted = true;
+            calculateModalResults();
         });
 
-        exam.innerHTML += `<button onclick="finishExam()">إنهاء الامتحان</button>`;
-    }
+        // مراجعة الإجابات في النافذة المنبثقة
+        modalReviewAnswersBtn.addEventListener('click', () => {
+            modalExamContainer.innerHTML = '';
+            
+            currentTakingExam.questions.forEach((question, index) => {
+                const userAnswer = currentExamAnswers[index];
+                const isCorrect = userAnswer === question.correct;
+                
+                const questionElement = document.createElement('div');
+                questionElement.className = 'exam-question';
+                questionElement.innerHTML = `
+                    <div class="question-text">${index + 1}. ${question.text}</div>
+                    <div class="exam-options">
+                        ${question.options.map((option, i) => {
+                            let className = 'exam-option';
+                            if (i === question.correct) {
+                                className += ' correct';
+                            } else if (i === userAnswer && !isCorrect) {
+                                className += ' selected';
+                            }
+                            
+                            return `
+                                <div class="${className}">
+                                    <span class="option-number">${i + 1}</span>
+                                    <span>${option}</span>
+                                    ${i === question.correct ? '<i class="fas fa-check correct-answer"></i>' : ''}
+                                    ${i === userAnswer && !isCorrect ? '<i class="fas fa-times" style="color: var(--danger);"></i>' : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div style="margin-top: 10px; font-weight: bold; color: ${isCorrect ? 'var(--green)' : 'var(--danger)'}">
+                        ${isCorrect ? 'إجابة صحيحة' : 'إجابة خاطئة'}
+                    </div>
+                `;
+                
+                modalExamContainer.appendChild(questionElement);
+            });
+            
+            modalExamActions.style.display = 'none';
+            modalResultsContainer.style.display = 'block';
+        });
 
-    function finishExam() {
-        let score = 0;
+        // حساب نتائج الامتحان في النافذة المنبثقة
+        function calculateModalResults() {
+            let correctCount = 0;
+            
+            currentTakingExam.questions.forEach((question, index) => {
+                if (currentExamAnswers[index] === question.correct) {
+                    correctCount++;
+                }
+            });
+            
+            const score = correctCount;
+            const total = currentTakingExam.questions.length;
+            const percentage = Math.round((correctCount / total) * 100);
+            
+            modalScore.textContent = `${score}/${total}`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = 'ممتاز! أداء رائع!';
+            } else if (percentage >= 80) {
+                message = 'جيد جداً! أحسنت!';
+            } else if (percentage >= 70) {
+                message = 'جيد! يمكنك التحسين أكثر';
+            } else if (percentage >= 60) {
+                message = 'مقبول! تحتاج للمزيد من الدراسة';
+            } else {
+                message = 'ضعيف! تحتاج لمراجعة المادة';
+            }
+            
+            modalResultMessage.textContent = `نسبة النجاح: ${percentage}% - ${message}`;
+            
+            // تحديث إحصائيات الامتحان
+            const examIndex = publicExams.findIndex(e => e.id === currentTakingExam.id);
+            if (examIndex !== -1) {
+                publicExams[examIndex].attempts += 1;
+                publicExams[examIndex].avgScore = Math.round(
+                    ((publicExams[examIndex].avgScore * (publicExams[examIndex].attempts - 1)) + percentage) / publicExams[examIndex].attempts
+                );
+                savePublicExams();
+            }
+            
+            modalExamActions.style.display = 'none';
+            modalResultsContainer.style.display = 'block';
+        }
 
-        questions.forEach((q, i) => {
-            let ans = document.querySelector(`input[name="q${i}"]:checked`);
-            if (ans && Number(ans.value) === q.correct) {
-                score++;
+        // البحث في الامتحانات
+        searchBtn.addEventListener('click', searchExams);
+        searchExamsInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') {
+                searchExams();
             }
         });
 
-        alert("درجتك هي: " + score + " من " + questions.length);
-    }
-</script>
+        function searchExams() {
+            const searchTerm = searchExamsInput.value.trim().toLowerCase();
+            
+            if (searchTerm === '') {
+                displayPublicExams();
+                return;
+            }
+            
+            const filteredExams = publicExams.filter(exam => 
+                exam.title.toLowerCase().includes(searchTerm) || 
+                exam.description.toLowerCase().includes(searchTerm) ||
+                exam.author.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filteredExams.length === 0) {
+                publicExamsGrid.innerHTML = `
+                    <div class="no-questions">
+                        <i class="fas fa-search"></i>
+                        <h3>لا توجد نتائج للبحث</h3>
+                        <p>جرب استخدام كلمات بحث أخرى</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            publicExamsGrid.innerHTML = '';
+            
+            filteredExams.forEach(exam => {
+                const examElement = document.createElement('div');
+                examElement.className = 'exam-card';
+                examElement.innerHTML = `
+                    <div class="exam-title">${exam.title}</div>
+                    <div class="exam-meta">
+                        <div class="exam-author">
+                            <i class="fas fa-user"></i> ${exam.author}
+                        </div>
+                        <div class="exam-questions-count">${exam.questions.length} سؤال</div>
+                    </div>
+                    <p>${exam.description || 'لا يوجد وصف'}</p>
+                    <div class="exam-stats">
+                        <div class="stat">
+                            <div class="stat-value">${exam.attempts}</div>
+                            <div class="stat-label">مرات الحل</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${exam.avgScore}%</div>
+                            <div class="stat-label">متوسط النتيجة</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value">${Math.ceil((new Date() - new Date(exam.createdAt)) / (1000 * 60 * 60 * 24))}</div>
+                            <div class="stat-label">أيام</div>
+                        </div>
+                    </div>
+                    <button class="btn" style="width: 100%; margin-top: 15px;" onclick="takeExam(${exam.id})">
+                        <i class="fas fa-play"></i> بدء الامتحان
+                    </button>
+                `;
+                
+                publicExamsGrid.appendChild(examElement);
+            });
+        }
 
+        // تهيئة التطبيق عند التحميل
+        document.addEventListener('DOMContentLoaded', () => {
+            displayPublicExams();
+            displayMyExams();
+        });
+    </script>
 </body>
 </html>
