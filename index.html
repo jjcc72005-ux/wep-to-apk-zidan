@@ -78,6 +78,7 @@
             justify-content: center;
             gap: 10px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
@@ -220,6 +221,14 @@
             background-color: #e91e63;
         }
 
+        .btn-warning {
+            background-color: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background-color: #e68a17;
+        }
+
         .questions-list {
             margin-top: 30px;
         }
@@ -331,6 +340,7 @@
             justify-content: center;
             gap: 15px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .no-questions {
@@ -343,6 +353,83 @@
             font-size: 3rem;
             margin-bottom: 15px;
             color: #dee2e6;
+        }
+
+        .share-section {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .share-link {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .share-link input {
+            flex: 1;
+            background-color: var(--white);
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-family: monospace;
+        }
+
+        .copy-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--secondary);
+        }
+
+        .share-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .share-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s;
+        }
+
+        .share-btn:hover {
+            opacity: 0.9;
+        }
+
+        .whatsapp {
+            background-color: #25D366;
+        }
+
+        .telegram {
+            background-color: #0088cc;
+        }
+
+        .facebook {
+            background-color: #3b5998;
+        }
+
+        .twitter {
+            background-color: #1DA1F2;
         }
 
         footer {
@@ -362,6 +449,10 @@
             }
             
             .actions {
+                flex-direction: column;
+            }
+            
+            .share-link {
                 flex-direction: column;
             }
         }
@@ -387,6 +478,9 @@
                 </button>
                 <button class="tab-btn" data-tab="take-exam">
                     <i class="fas fa-pencil-alt"></i> أداء الامتحان
+                </button>
+                <button class="tab-btn" data-tab="share-exam">
+                    <i class="fas fa-share-alt"></i> مشاركة الامتحان
                 </button>
             </div>
         </header>
@@ -481,6 +575,51 @@
                 </button>
             </div>
         </div>
+
+        <!-- مشاركة الامتحان -->
+        <div class="tab-content" id="share-exam">
+            <h2><i class="fas fa-share-alt"></i> مشاركة الامتحان مع الأصدقاء</h2>
+            
+            <div class="share-section">
+                <h3>رابط مشاركة الامتحان</h3>
+                <p>انسخ الرابط التالي وأرسله لأصدقائك ليشاركوك في الامتحان:</p>
+                
+                <div class="share-link">
+                    <input type="text" id="shareUrl" readonly>
+                    <button class="copy-btn" id="copyUrl">
+                        <i class="fas fa-copy"></i> نسخ
+                    </button>
+                </div>
+                
+                <p>أو شارك مباشرة عبر:</p>
+                
+                <div class="share-buttons">
+                    <button class="share-btn whatsapp" id="shareWhatsApp">
+                        <i class="fab fa-whatsapp"></i> واتساب
+                    </button>
+                    <button class="share-btn telegram" id="shareTelegram">
+                        <i class="fab fa-telegram"></i> تليجرام
+                    </button>
+                    <button class="share-btn facebook" id="shareFacebook">
+                        <i class="fab fa-facebook"></i> فيسبوك
+                    </button>
+                    <button class="share-btn twitter" id="shareTwitter">
+                        <i class="fab fa-twitter"></i> تويتر
+                    </button>
+                </div>
+            </div>
+            
+            <div class="share-section" style="margin-top: 30px;">
+                <h3>تعليمات المشاركة</h3>
+                <ol style="text-align: right; margin: 15px 0; padding-right: 20px;">
+                    <li>أضف أسئلة الامتحان من قسم "إضافة أسئلة"</li>
+                    <li>انسخ رابط المشاركة أعلاه</li>
+                    <li>أرسل الرابط لأصدقائك</li>
+                    <li>عندما يفتح صديقك الرابط، سيدخل مباشرة إلى الامتحان</li>
+                    <li>يمكن لكل شخص إجراء الامتحان ورؤية نتيجته</li>
+                </ol>
+            </div>
+        </div>
         
         <footer>
             <p>تم التطوير بواسطة نظام "امتحني" &copy; 2023</p>
@@ -506,6 +645,103 @@
         const reviewAnswersBtn = document.getElementById('reviewAnswers');
         const scoreElement = document.getElementById('score');
         const resultMessage = document.getElementById('resultMessage');
+        const shareUrlInput = document.getElementById('shareUrl');
+        const copyUrlBtn = document.getElementById('copyUrl');
+        const shareWhatsAppBtn = document.getElementById('shareWhatsApp');
+        const shareTelegramBtn = document.getElementById('shareTelegram');
+        const shareFacebookBtn = document.getElementById('shareFacebook');
+        const shareTwitterBtn = document.getElementById('shareTwitter');
+
+        // إنشاء رابط المشاركة
+        function generateShareUrl() {
+            const currentUrl = window.location.href.split('?')[0];
+            const questionsParam = btoa(JSON.stringify(questions));
+            return `${currentUrl}?exam=${questionsParam}`;
+        }
+
+        // تحديث رابط المشاركة
+        function updateShareUrl() {
+            if (questions.length > 0) {
+                shareUrlInput.value = generateShareUrl();
+            } else {
+                shareUrlInput.value = 'أضف أسئلة أولاً لتوليد رابط المشاركة';
+            }
+        }
+
+        // نسخ الرابط
+        copyUrlBtn.addEventListener('click', () => {
+            if (questions.length === 0) {
+                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
+                return;
+            }
+            
+            shareUrlInput.select();
+            document.execCommand('copy');
+            alert('تم نسخ رابط المشاركة!');
+        });
+
+        // مشاركة عبر واتساب
+        shareWhatsAppBtn.addEventListener('click', () => {
+            if (questions.length === 0) {
+                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
+                return;
+            }
+            
+            const shareText = `اختبر نفسك في هذا الامتحان: ${generateShareUrl()}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
+        });
+
+        // مشاركة عبر تليجرام
+        shareTelegramBtn.addEventListener('click', () => {
+            if (questions.length === 0) {
+                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
+                return;
+            }
+            
+            const shareText = `اختبر نفسك في هذا الامتحان: ${generateShareUrl()}`;
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(generateShareUrl())}&text=${encodeURIComponent('اختبر نفسك في هذا الامتحان')}`, '_blank');
+        });
+
+        // مشاركة عبر فيسبوك
+        shareFacebookBtn.addEventListener('click', () => {
+            if (questions.length === 0) {
+                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
+                return;
+            }
+            
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(generateShareUrl())}`, '_blank');
+        });
+
+        // مشاركة عبر تويتر
+        shareTwitterBtn.addEventListener('click', () => {
+            if (questions.length === 0) {
+                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
+                return;
+            }
+            
+            const shareText = `اختبر نفسك في هذا الامتحان: ${generateShareUrl()}`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
+        });
+
+        // تحميل الامتحان من الرابط
+        function loadExamFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const examParam = urlParams.get('exam');
+            
+            if (examParam) {
+                try {
+                    const sharedQuestions = JSON.parse(atob(examParam));
+                    if (Array.isArray(sharedQuestions) && sharedQuestions.length > 0) {
+                        questions = sharedQuestions;
+                        saveQuestions();
+                        document.querySelector('[data-tab="take-exam"]').click();
+                        startExam();
+                    }
+                } catch (e) {
+                    console.error('Error loading shared exam:', e);
+                }
+            }
+        }
 
         // تبديل التبويبات
         tabBtns.forEach(btn => {
@@ -527,6 +763,8 @@
                     if (questions.length > 0) {
                         startExam();
                     }
+                } else if (tabId === 'share-exam') {
+                    updateShareUrl();
                 }
             });
         });
@@ -563,8 +801,8 @@
             // عرض رسالة نجاح
             alert('تم إضافة السؤال بنجاح!');
             
-            // الانتقال إلى تبويب عرض الأسئلة
-            document.querySelector('[data-tab="view-questions"]').click();
+            // تحديث رابط المشاركة
+            updateShareUrl();
         });
 
         // حفظ الأسئلة في localStorage
@@ -616,6 +854,7 @@
                 questions = questions.filter(q => q.id !== id);
                 saveQuestions();
                 displayQuestions();
+                updateShareUrl();
             }
         }
 
@@ -765,6 +1004,8 @@
         // تهيئة التطبيق عند التحميل
         document.addEventListener('DOMContentLoaded', () => {
             displayQuestions();
+            updateShareUrl();
+            loadExamFromUrl();
         });
     </script>
 </body>
