@@ -2,1011 +2,178 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>امتحني - نظام الاختبارات الإلكترونية</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>امتحني شكراً</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --warning: #f8961e;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --green: #2ec4b6;
-            --white: #ffffff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--dark);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
             padding: 20px;
+            direction: rtl;
+            text-align: right;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 700px;
+            margin: auto;
+            box-shadow: 0px 0px 10px #ccc;
         }
 
-        header {
-            background-color: var(--white);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow);
+        h1, h2 {
             text-align: center;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-
-        .logo i {
-            font-size: 2.5rem;
-            color: var(--primary);
-        }
-
-        h1 {
-            color: var(--primary);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: var(--dark);
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-
-        .nav-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            padding: 12px 25px;
-            background-color: var(--light);
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--dark);
-        }
-
-        .tab-btn.active {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-
-        .tab-btn:hover:not(.active) {
-            background-color: #e9ecef;
-        }
-
-        .tab-content {
-            display: none;
-            background-color: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            margin-top: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .tab-content.active {
+        img.logo {
             display: block;
-            animation: fadeIn 0.5s ease;
+            margin: auto;
+            width: 120px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .options-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .option-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            background-color: var(--light);
-            border-radius: 10px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .option-item:hover {
-            border-color: var(--primary);
-        }
-
-        .option-item input {
-            flex: 1;
-            border: none;
-            background: transparent;
-            padding: 0;
-        }
-
-        .option-item input:focus {
-            border: none;
-            outline: none;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            background-color: var(--primary);
-            color: var(--white);
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn:hover {
-            background-color: var(--secondary);
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background-color: var(--green);
-        }
-
-        .btn-success:hover {
-            background-color: #26a69a;
-        }
-
-        .btn-danger {
-            background-color: var(--danger);
-        }
-
-        .btn-danger:hover {
-            background-color: #e91e63;
-        }
-
-        .btn-warning {
-            background-color: var(--warning);
-        }
-
-        .btn-warning:hover {
-            background-color: #e68a17;
-        }
-
-        .questions-list {
-            margin-top: 30px;
-        }
-
-        .question-card {
-            background-color: var(--light);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 5px solid var(--primary);
-        }
-
-        .question-text {
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        .options-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .option {
-            padding: 10px;
-            background-color: var(--white);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .option.correct {
-            background-color: rgba(46, 196, 182, 0.2);
-            border: 2px solid var(--green);
-        }
-
-        .option-number {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: var(--primary);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .exam-container {
+        .question {
             margin-top: 20px;
-        }
-
-        .exam-question {
-            background-color: var(--light);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .exam-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .exam-option {
-            padding: 12px 15px;
-            background-color: var(--white);
-            border: 2px solid #e9ecef;
+            padding: 15px;
+            background: #fafafa;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        .exam-option:hover {
-            border-color: var(--primary);
-        }
-
-        .exam-option.selected {
-            border-color: var(--primary);
-            background-color: rgba(67, 97, 238, 0.1);
-        }
-
-        .results-container {
-            text-align: center;
-            padding: 30px;
-        }
-
-        .score {
-            font-size: 3rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin: 20px 0;
-        }
-
-        .correct-answer {
-            color: var(--green);
-            font-weight: bold;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        .no-questions {
-            text-align: center;
-            padding: 40px;
-            color: #6c757d;
-        }
-
-        .no-questions i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #dee2e6;
-        }
-
-        .share-section {
-            background-color: var(--light);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .share-link {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .share-link input {
-            flex: 1;
-            background-color: var(--white);
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            padding: 10px 15px;
-            font-family: monospace;
-        }
-
-        .copy-btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .copy-btn:hover {
-            background-color: var(--secondary);
-        }
-
-        .share-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .share-btn {
+        button {
             padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            color: white;
+            margin-top: 20px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: opacity 0.3s;
         }
 
-        .share-btn:hover {
-            opacity: 0.9;
-        }
-
-        .whatsapp {
-            background-color: #25D366;
-        }
-
-        .telegram {
-            background-color: #0088cc;
-        }
-
-        .facebook {
-            background-color: #3b5998;
-        }
-
-        .twitter {
-            background-color: #1DA1F2;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--white);
-            padding: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .options-container, .options-list {
-                grid-template-columns: 1fr;
-            }
-            
-            .nav-tabs {
-                flex-direction: column;
-            }
-            
-            .actions {
-                flex-direction: column;
-            }
-            
-            .share-link {
-                flex-direction: column;
-            }
-        }
+        .correct { color: green; font-weight: bold; }
+        .wrong { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i>
-                <div>
-                    <h1>امتحني</h1>
-                    <p class="subtitle">نظام الاختبارات الإلكترونية المتكامل</p>
-                </div>
-            </div>
-            
-            <div class="nav-tabs">
-                <button class="tab-btn active" data-tab="add-question">
-                    <i class="fas fa-plus-circle"></i> إضافة أسئلة
-                </button>
-                <button class="tab-btn" data-tab="view-questions">
-                    <i class="fas fa-list"></i> عرض الأسئلة
-                </button>
-                <button class="tab-btn" data-tab="take-exam">
-                    <i class="fas fa-pencil-alt"></i> أداء الامتحان
-                </button>
-                <button class="tab-btn" data-tab="share-exam">
-                    <i class="fas fa-share-alt"></i> مشاركة الامتحان
-                </button>
-            </div>
-        </header>
 
-        <!-- إضافة الأسئلة -->
-        <div class="tab-content active" id="add-question">
-            <h2><i class="fas fa-plus-circle"></i> إضافة سؤال جديد</h2>
-            <form id="questionForm">
-                <div class="form-group">
-                    <label for="questionText">نص السؤال:</label>
-                    <textarea id="questionText" placeholder="أدخل نص السؤال هنا..." required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>الاختيارات:</label>
-                    <div class="options-container">
-                        <div class="option-item">
-                            <span class="option-number">1</span>
-                            <input type="text" id="option1" placeholder="الاختيار الأول" required>
-                        </div>
-                        <div class="option-item">
-                            <span class="option-number">2</span>
-                            <input type="text" id="option2" placeholder="الاختيار الثاني" required>
-                        </div>
-                        <div class="option-item">
-                            <span class="option-number">3</span>
-                            <input type="text" id="option3" placeholder="الاختيار الثالث" required>
-                        </div>
-                        <div class="option-item">
-                            <span class="option-number">4</span>
-                            <input type="text" id="option4" placeholder="الاختيار الرابع" required>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="correctAnswer">الإجابة الصحيحة:</label>
-                    <select id="correctAnswer" required>
-                        <option value="">اختر الإجابة الصحيحة</option>
-                        <option value="1">الاختيار الأول</option>
-                        <option value="2">الاختيار الثاني</option>
-                        <option value="3">الاختيار الثالث</option>
-                        <option value="4">الاختيار الرابع</option>
-                    </select>
-                </div>
-                
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-save"></i> حفظ السؤال
-                </button>
-            </form>
-        </div>
+<div class="container">
+    <img src="1.jpg" class="logo" alt="Logo">
 
-        <!-- عرض الأسئلة -->
-        <div class="tab-content" id="view-questions">
-            <h2><i class="fas fa-list"></i> الأسئلة المضافة</h2>
-            <div class="questions-list" id="questionsList">
-                <!-- سيتم عرض الأسئلة هنا ديناميكيًا -->
-                <div class="no-questions">
-                    <i class="fas fa-inbox"></i>
-                    <h3>لا توجد أسئلة مضافة بعد</h3>
-                    <p>إضغط على زر "إضافة أسئلة" لإضافة أول سؤال لك</p>
-                </div>
-            </div>
-        </div>
+    <h1>امتحني شكراً</h1>
+    <h2>إنشاء امتحان جديد</h2>
 
-        <!-- أداء الامتحان -->
-        <div class="tab-content" id="take-exam">
-            <h2><i class="fas fa-pencil-alt"></i> أداء الامتحان</h2>
-            <div class="exam-container" id="examContainer">
-                <div class="no-questions">
-                    <i class="fas fa-file-alt"></i>
-                    <h3>لا توجد أسئلة لأداء الامتحان</h3>
-                    <p>يجب إضافة أسئلة أولاً من قسم "إضافة أسئلة"</p>
-                </div>
-            </div>
-            
-            <div class="actions" id="examActions" style="display: none;">
-                <button class="btn btn-success" id="submitExam">
-                    <i class="fas fa-check-circle"></i> إنهاء الاختبار
-                </button>
-                <button class="btn btn-danger" id="resetExam">
-                    <i class="fas fa-redo"></i> إعادة الاختبار
-                </button>
-            </div>
-            
-            <div class="results-container" id="resultsContainer" style="display: none;">
-                <h2>نتيجة الاختبار</h2>
-                <div class="score" id="score">0/0</div>
-                <p id="resultMessage"></p>
-                <button class="btn" id="reviewAnswers">
-                    <i class="fas fa-eye"></i> مراجعة الإجابات
-                </button>
-            </div>
-        </div>
+    <div>
+        <label>السؤال:</label>
+        <input type="text" id="questionText" style="width:100%">
+        <br><br>
 
-        <!-- مشاركة الامتحان -->
-        <div class="tab-content" id="share-exam">
-            <h2><i class="fas fa-share-alt"></i> مشاركة الامتحان مع الأصدقاء</h2>
-            
-            <div class="share-section">
-                <h3>رابط مشاركة الامتحان</h3>
-                <p>انسخ الرابط التالي وأرسله لأصدقائك ليشاركوك في الامتحان:</p>
-                
-                <div class="share-link">
-                    <input type="text" id="shareUrl" readonly>
-                    <button class="copy-btn" id="copyUrl">
-                        <i class="fas fa-copy"></i> نسخ
-                    </button>
-                </div>
-                
-                <p>أو شارك مباشرة عبر:</p>
-                
-                <div class="share-buttons">
-                    <button class="share-btn whatsapp" id="shareWhatsApp">
-                        <i class="fab fa-whatsapp"></i> واتساب
-                    </button>
-                    <button class="share-btn telegram" id="shareTelegram">
-                        <i class="fab fa-telegram"></i> تليجرام
-                    </button>
-                    <button class="share-btn facebook" id="shareFacebook">
-                        <i class="fab fa-facebook"></i> فيسبوك
-                    </button>
-                    <button class="share-btn twitter" id="shareTwitter">
-                        <i class="fab fa-twitter"></i> تويتر
-                    </button>
-                </div>
-            </div>
-            
-            <div class="share-section" style="margin-top: 30px;">
-                <h3>تعليمات المشاركة</h3>
-                <ol style="text-align: right; margin: 15px 0; padding-right: 20px;">
-                    <li>أضف أسئلة الامتحان من قسم "إضافة أسئلة"</li>
-                    <li>انسخ رابط المشاركة أعلاه</li>
-                    <li>أرسل الرابط لأصدقائك</li>
-                    <li>عندما يفتح صديقك الرابط، سيدخل مباشرة إلى الامتحان</li>
-                    <li>يمكن لكل شخص إجراء الامتحان ورؤية نتيجته</li>
-                </ol>
-            </div>
-        </div>
-        
-        <footer>
-            <p>تم التطوير بواسطة نظام "امتحني" &copy; 2023</p>
-        </footer>
+        <label>الإجابات الأربعة:</label>
+        <input placeholder="اختيار 1" id="c1" style="width:100%"><br><br>
+        <input placeholder="اختيار 2" id="c2" style="width:100%"><br><br>
+        <input placeholder="اختيار 3" id="c3" style="width:100%"><br><br>
+        <input placeholder="اختيار 4" id="c4" style="width:100%"><br><br>
+
+        <label>الاختيار الصحيح (1 - 4):</label>
+        <input type="number" id="correct" min="1" max="4">
+
+        <button onclick="addQuestion()">إضافة السؤال</button>
     </div>
 
-    <script>
-        // بيانات التطبيق
-        let questions = JSON.parse(localStorage.getItem('examniQuestions')) || [];
-        let currentExamAnswers = [];
-        let examSubmitted = false;
+    <hr>
 
-        // عناصر DOM
-        const tabBtns = document.querySelectorAll('.tab-btn');
-        const tabContents = document.querySelectorAll('.tab-content');
-        const questionForm = document.getElementById('questionForm');
-        const questionsList = document.getElementById('questionsList');
-        const examContainer = document.getElementById('examContainer');
-        const examActions = document.getElementById('examActions');
-        const resultsContainer = document.getElementById('resultsContainer');
-        const submitExamBtn = document.getElementById('submitExam');
-        const resetExamBtn = document.getElementById('resetExam');
-        const reviewAnswersBtn = document.getElementById('reviewAnswers');
-        const scoreElement = document.getElementById('score');
-        const resultMessage = document.getElementById('resultMessage');
-        const shareUrlInput = document.getElementById('shareUrl');
-        const copyUrlBtn = document.getElementById('copyUrl');
-        const shareWhatsAppBtn = document.getElementById('shareWhatsApp');
-        const shareTelegramBtn = document.getElementById('shareTelegram');
-        const shareFacebookBtn = document.getElementById('shareFacebook');
-        const shareTwitterBtn = document.getElementById('shareTwitter');
+    <h2>الأسئلة المضافة</h2>
+    <div id="questionsList"></div>
 
-        // إنشاء رابط المشاركة
-        function generateShareUrl() {
-            const currentUrl = window.location.href.split('?')[0];
-            const questionsParam = btoa(JSON.stringify(questions));
-            return `${currentUrl}?exam=${questionsParam}`;
+    <button onclick="startExam()">بدء الامتحان</button>
+
+    <div id="examArea"></div>
+
+</div>
+
+<script>
+    let questions = [];
+
+    // تحميل الأسئلة من التخزين
+    if (localStorage.getItem("exam_questions")) {
+        questions = JSON.parse(localStorage.getItem("exam_questions"));
+        displayQuestions();
+    }
+
+    function addQuestion() {
+        let q = document.getElementById("questionText").value;
+        let c1 = document.getElementById("c1").value;
+        let c2 = document.getElementById("c2").value;
+        let c3 = document.getElementById("c3").value;
+        let c4 = document.getElementById("c4").value;
+        let correct = document.getElementById("correct").value;
+
+        if (!q || !c1 || !c2 || !c3 || !c4 || !correct) {
+            alert("اكمل كل الحقول");
+            return;
         }
 
-        // تحديث رابط المشاركة
-        function updateShareUrl() {
-            if (questions.length > 0) {
-                shareUrlInput.value = generateShareUrl();
-            } else {
-                shareUrlInput.value = 'أضف أسئلة أولاً لتوليد رابط المشاركة';
-            }
-        }
-
-        // نسخ الرابط
-        copyUrlBtn.addEventListener('click', () => {
-            if (questions.length === 0) {
-                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
-                return;
-            }
-            
-            shareUrlInput.select();
-            document.execCommand('copy');
-            alert('تم نسخ رابط المشاركة!');
+        questions.push({
+            question: q,
+            choices: [c1, c2, c3, c4],
+            correct: Number(correct)
         });
 
-        // مشاركة عبر واتساب
-        shareWhatsAppBtn.addEventListener('click', () => {
-            if (questions.length === 0) {
-                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
-                return;
-            }
-            
-            const shareText = `اختبر نفسك في هذا الامتحان: ${generateShareUrl()}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
+        localStorage.setItem("exam_questions", JSON.stringify(questions));
+
+        displayQuestions();
+
+        document.getElementById("questionText").value = "";
+        document.getElementById("c1").value = "";
+        document.getElementById("c2").value = "";
+        document.getElementById("c3").value = "";
+        document.getElementById("c4").value = "";
+        document.getElementById("correct").value = "";
+    }
+
+    function displayQuestions() {
+        let list = document.getElementById("questionsList");
+        list.innerHTML = "";
+
+        questions.forEach((q, i) => {
+            list.innerHTML += `
+            <div class="question">
+                <b>سؤال ${i+1}:</b> ${q.question}<br>
+                - ${q.choices[0]}<br>
+                - ${q.choices[1]}<br>
+                - ${q.choices[2]}<br>
+                - ${q.choices[3]}<br>
+                <span class="correct">✔ الإجابة الصحيحة: ${q.correct}</span>
+            </div>
+            `;
+        });
+    }
+
+    function startExam() {
+        let exam = document.getElementById("examArea");
+        exam.innerHTML = "<h2>الامتحان</h2>";
+
+        questions.forEach((q, i) => {
+            exam.innerHTML += `
+            <div class="question">
+                <b>${q.question}</b><br>
+                <input type="radio" name="q${i}" value="1"> ${q.choices[0]}<br>
+                <input type="radio" name="q${i}" value="2"> ${q.choices[1]}<br>
+                <input type="radio" name="q${i}" value="3"> ${q.choices[2]}<br>
+                <input type="radio" name="q${i}" value="4"> ${q.choices[3]}<br>
+            </div>
+            `;
         });
 
-        // مشاركة عبر تليجرام
-        shareTelegramBtn.addEventListener('click', () => {
-            if (questions.length === 0) {
-                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
-                return;
+        exam.innerHTML += `<button onclick="finishExam()">إنهاء الامتحان</button>`;
+    }
+
+    function finishExam() {
+        let score = 0;
+
+        questions.forEach((q, i) => {
+            let ans = document.querySelector(`input[name="q${i}"]:checked`);
+            if (ans && Number(ans.value) === q.correct) {
+                score++;
             }
-            
-            const shareText = `اختبر نفسك في هذا الامتحان: ${generateShareUrl()}`;
-            window.open(`https://t.me/share/url?url=${encodeURIComponent(generateShareUrl())}&text=${encodeURIComponent('اختبر نفسك في هذا الامتحان')}`, '_blank');
         });
 
-        // مشاركة عبر فيسبوك
-        shareFacebookBtn.addEventListener('click', () => {
-            if (questions.length === 0) {
-                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
-                return;
-            }
-            
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(generateShareUrl())}`, '_blank');
-        });
+        alert("درجتك هي: " + score + " من " + questions.length);
+    }
+</script>
 
-        // مشاركة عبر تويتر
-        shareTwitterBtn.addEventListener('click', () => {
-            if (questions.length === 0) {
-                alert('يجب إضافة أسئلة أولاً لتوليد رابط المشاركة');
-                return;
-            }
-            
-            const shareText = `اختبر نفسك في هذا الامتحان: ${generateShareUrl()}`;
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank');
-        });
-
-        // تحميل الامتحان من الرابط
-        function loadExamFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const examParam = urlParams.get('exam');
-            
-            if (examParam) {
-                try {
-                    const sharedQuestions = JSON.parse(atob(examParam));
-                    if (Array.isArray(sharedQuestions) && sharedQuestions.length > 0) {
-                        questions = sharedQuestions;
-                        saveQuestions();
-                        document.querySelector('[data-tab="take-exam"]').click();
-                        startExam();
-                    }
-                } catch (e) {
-                    console.error('Error loading shared exam:', e);
-                }
-            }
-        }
-
-        // تبديل التبويبات
-        tabBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tabId = btn.getAttribute('data-tab');
-                
-                // إزالة النشاط من جميع الأزرار والمحتويات
-                tabBtns.forEach(b => b.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-                
-                // إضافة النشاط للزر والمحتوى المحدد
-                btn.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-                
-                // تحديث عرض الأسئلة إذا كان التبويب نشط
-                if (tabId === 'view-questions') {
-                    displayQuestions();
-                } else if (tabId === 'take-exam') {
-                    if (questions.length > 0) {
-                        startExam();
-                    }
-                } else if (tabId === 'share-exam') {
-                    updateShareUrl();
-                }
-            });
-        });
-
-        // إضافة سؤال جديد
-        questionForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const questionText = document.getElementById('questionText').value;
-            const option1 = document.getElementById('option1').value;
-            const option2 = document.getElementById('option2').value;
-            const option3 = document.getElementById('option3').value;
-            const option4 = document.getElementById('option4').value;
-            const correctAnswer = document.getElementById('correctAnswer').value;
-            
-            if (!questionText || !option1 || !option2 || !option3 || !option4 || !correctAnswer) {
-                alert('يرجى ملء جميع الحقول');
-                return;
-            }
-            
-            const newQuestion = {
-                id: Date.now(),
-                text: questionText,
-                options: [option1, option2, option3, option4],
-                correct: parseInt(correctAnswer) - 1
-            };
-            
-            questions.push(newQuestion);
-            saveQuestions();
-            
-            // إعادة تعيين النموذج
-            questionForm.reset();
-            
-            // عرض رسالة نجاح
-            alert('تم إضافة السؤال بنجاح!');
-            
-            // تحديث رابط المشاركة
-            updateShareUrl();
-        });
-
-        // حفظ الأسئلة في localStorage
-        function saveQuestions() {
-            localStorage.setItem('examniQuestions', JSON.stringify(questions));
-        }
-
-        // عرض الأسئلة في قائمة
-        function displayQuestions() {
-            if (questions.length === 0) {
-                questionsList.innerHTML = `
-                    <div class="no-questions">
-                        <i class="fas fa-inbox"></i>
-                        <h3>لا توجد أسئلة مضافة بعد</h3>
-                        <p>إضغط على زر "إضافة أسئلة" لإضافة أول سؤال لك</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            questionsList.innerHTML = '';
-            
-            questions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'question-card';
-                questionElement.innerHTML = `
-                    <div class="question-text">${index + 1}. ${question.text}</div>
-                    <div class="options-list">
-                        ${question.options.map((option, i) => `
-                            <div class="option ${i === question.correct ? 'correct' : ''}">
-                                <span class="option-number">${i + 1}</span>
-                                <span>${option}</span>
-                                ${i === question.correct ? '<i class="fas fa-check correct-answer"></i>' : ''}
-                            </div>
-                        `).join('')}
-                    </div>
-                    <button class="btn btn-danger" onclick="deleteQuestion(${question.id})" style="margin-top: 15px;">
-                        <i class="fas fa-trash"></i> حذف السؤال
-                    </button>
-                `;
-                
-                questionsList.appendChild(questionElement);
-            });
-        }
-
-        // حذف سؤال
-        function deleteQuestion(id) {
-            if (confirm('هل أنت متأكد من حذف هذا السؤال؟')) {
-                questions = questions.filter(q => q.id !== id);
-                saveQuestions();
-                displayQuestions();
-                updateShareUrl();
-            }
-        }
-
-        // بدء الامتحان
-        function startExam() {
-            examContainer.innerHTML = '';
-            currentExamAnswers = new Array(questions.length).fill(null);
-            examSubmitted = false;
-            
-            questions.forEach((question, index) => {
-                const questionElement = document.createElement('div');
-                questionElement.className = 'exam-question';
-                questionElement.innerHTML = `
-                    <div class="question-text">${index + 1}. ${question.text}</div>
-                    <div class="exam-options">
-                        ${question.options.map((option, i) => `
-                            <div class="exam-option" data-question="${index}" data-option="${i}">
-                                <span class="option-number">${i + 1}</span>
-                                <span>${option}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                
-                examContainer.appendChild(questionElement);
-            });
-            
-            // إضافة أحداث النقر على الخيارات
-            document.querySelectorAll('.exam-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    if (examSubmitted) return;
-                    
-                    const questionIndex = parseInt(this.getAttribute('data-question'));
-                    const optionIndex = parseInt(this.getAttribute('data-option'));
-                    
-                    // إزالة التحديد من جميع خيارات هذا السؤال
-                    const allOptions = document.querySelectorAll(`.exam-option[data-question="${questionIndex}"]`);
-                    allOptions.forEach(opt => opt.classList.remove('selected'));
-                    
-                    // تحديد الخيار المختار
-                    this.classList.add('selected');
-                    
-                    // حفظ الإجابة
-                    currentExamAnswers[questionIndex] = optionIndex;
-                });
-            });
-            
-            examActions.style.display = 'flex';
-            resultsContainer.style.display = 'none';
-        }
-
-        // تقديم الامتحان
-        submitExamBtn.addEventListener('click', () => {
-            const unanswered = currentExamAnswers.filter(answer => answer === null).length;
-            
-            if (unanswered > 0 && !confirm(`لديك ${unanswered} أسئلة لم تتم الإجابة عليها. هل تريد المتابعة؟`)) {
-                return;
-            }
-            
-            examSubmitted = true;
-            calculateResults();
-        });
-
-        // إعادة الاختبار
-        resetExamBtn.addEventListener('click', () => {
-            startExam();
-        });
-
-        // مراجعة الإجابات
-        reviewAnswersBtn.addEventListener('click', () => {
-            examContainer.innerHTML = '';
-            
-            questions.forEach((question, index) => {
-                const userAnswer = currentExamAnswers[index];
-                const isCorrect = userAnswer === question.correct;
-                
-                const questionElement = document.createElement('div');
-                questionElement.className = 'exam-question';
-                questionElement.innerHTML = `
-                    <div class="question-text">${index + 1}. ${question.text}</div>
-                    <div class="exam-options">
-                        ${question.options.map((option, i) => {
-                            let className = 'exam-option';
-                            if (i === question.correct) {
-                                className += ' correct';
-                            } else if (i === userAnswer && !isCorrect) {
-                                className += ' selected';
-                            }
-                            
-                            return `
-                                <div class="${className}">
-                                    <span class="option-number">${i + 1}</span>
-                                    <span>${option}</span>
-                                    ${i === question.correct ? '<i class="fas fa-check correct-answer"></i>' : ''}
-                                    ${i === userAnswer && !isCorrect ? '<i class="fas fa-times" style="color: var(--danger);"></i>' : ''}
-                                </div>
-                            `;
-                        }).join('')}
-                    </div>
-                    <div style="margin-top: 10px; font-weight: bold; color: ${isCorrect ? 'var(--green)' : 'var(--danger)'}">
-                        ${isCorrect ? 'إجابة صحيحة' : 'إجابة خاطئة'}
-                    </div>
-                `;
-                
-                examContainer.appendChild(questionElement);
-            });
-            
-            examActions.style.display = 'none';
-            resultsContainer.style.display = 'block';
-        });
-
-        // حساب النتائج
-        function calculateResults() {
-            let correctCount = 0;
-            
-            questions.forEach((question, index) => {
-                if (currentExamAnswers[index] === question.correct) {
-                    correctCount++;
-                }
-            });
-            
-            const score = correctCount;
-            const total = questions.length;
-            const percentage = Math.round((correctCount / total) * 100);
-            
-            scoreElement.textContent = `${score}/${total}`;
-            
-            let message = '';
-            if (percentage >= 90) {
-                message = 'ممتاز! أداء رائع!';
-            } else if (percentage >= 80) {
-                message = 'جيد جداً! أحسنت!';
-            } else if (percentage >= 70) {
-                message = 'جيد! يمكنك التحسين أكثر';
-            } else if (percentage >= 60) {
-                message = 'مقبول! تحتاج للمزيد من الدراسة';
-            } else {
-                message = 'ضعيف! تحتاج لمراجعة المادة';
-            }
-            
-            resultMessage.textContent = `نسبة النجاح: ${percentage}% - ${message}`;
-            
-            examActions.style.display = 'none';
-            resultsContainer.style.display = 'block';
-        }
-
-        // تهيئة التطبيق عند التحميل
-        document.addEventListener('DOMContentLoaded', () => {
-            displayQuestions();
-            updateShareUrl();
-            loadExamFromUrl();
-        });
-    </script>
 </body>
 </html>
